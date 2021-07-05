@@ -1,0 +1,154 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit; /* 즉, 루트 요소인 html의 속성값을 모든 요소들이 상속받게 한다는 뜻 */
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  user-select: none;
+}
+
+img, canvas {
+  /* 모바일에서 길게 누르면 이미지를 저장하는 이벤트를 prevent 하기 위함. */
+  pointer-events: none;
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 사용자가 굳이 작은 화살표를 누르지 않아도, 전체 화면상에서 40px 구분선 기준으로 왼쪽 화면 전체와 오른쪽 화면 전체를 터치해줘도 이벤트를 감지할 수 있도록 css를 조정해 즐거임. */
+#ui {
+  /* 버튼 영역을 화면 전체로 체움 */
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /* flex item들을 기본 방향인 row방향으로 가운데 정렬하되, 각 요소들을 교차축 방향(column)으로 가득 채움 */
+  display: flex;
+  justify-items: center;
+  align-content: stretch;
+}
+
+#ui>div {
+  /* 각 div의 img 요소들을 교차축(column) 방향으로 맨 아래쪽(flex-end)에 정렬시킴 */
+  display: flex;
+  align-items: flex-end;
+  flex: 1 1 auto; /* img 요소의 크기를 각각의 width, height 속성에 따라 지정함. 다만, 컨테이너인 div의 크기를 넘지 않기 위해 크기가 줄어들거나, 남은 공간을 채우기 위해 늘어날수도 있도록 함. */
+}
+
+.bright {
+  /* 주어진 이미지에 선형배수를 적용하여 밝거나 어둡게 표시해주는 함수. 근데 .bright 이라는 요소 자체가 예제에 없는데 왜 쓴건지 모르겠음... */
+  filter: brightness(2);
+}
+
+#left {
+  /* 자식 img 요소를 #left 컨테이너의 main-axis 방향(row)의 맨 끝 지점, 즉 맨 오른쪽으로 옮김. */
+  justify-content: flex-end;
+}
+
+#right {
+  /* 자식 img 요소를 #right 컨테이너의 main-axis 방향(row)의 맨 시작 지점, 즉 맨 왼쪽으로 옮김. */
+  justify-content: flex-start;
+}
+
+#ui img {
+  /* display를 block으로 지정하여 img 요소가 고유한 width, height값을 가지도록 설정해 줌. */
+  padding: 10px;
+  width: 80px;
+  height: 80px;
+  display: block;
+}
+
+#loading {
+  /* 프로그래스 바 컨테이너 영역을 화면 전체로 체움 */
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /* 자식 요소를 가운데 정렬하고, 텍스트 요소도 가운데 정렬함. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: xx-large;
+  font-family: sans-serif;
+}
+
+#loading>div>div {
+  /* 부모 요소가 #loading>div 인 div들만 패딩값을 할당함 */
+  padding: 2px;
+}
+
+.progress {
+  /* 프로그래스 바가 들어갈 영역의 너비는 뷰포트 너비의 절반으로 지정 */
+  width: 50vw;
+  border: 1px solid black;
+}
+
+#progressbar {
+  width: 0;
+  transition: width ease-out 0.5s; /* js에서 width값을 바꿔줄 때마다 트랜지션을 줘서 자연스럽게 넓어지도록 함 */
+  height: 1em; /* 부모의 부모 요소인 #loading에서 할당한 xx-large를 따름 */
+  background-color: #888;
+  background-image: linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.5) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.5) 75%,
+    transparent 75%,
+    transparent
+  ); /* 대각선 방향으로 25% 단위로 원래의 backgroundColor와 그것보다 0.5 투명도의 white color가 번갈아 나오는 그라디언트 사용 */
+  background-size: 50px 50px;
+  animation: progressanim 2s linear infinite; /* 위에서 만든 배경이 (50px 50px) 즉, 오른쪽 하단지점에서 (0 0)즉, 왼쪽 상단지점까지 2초 단위로 반복해서 올라가는 애니메이션 추가 */
+}
+
+@keyframes progressanim {
+  0% {
+    background-position: 50px 50px;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+#labels {
+  /* 컨테이너가 화면을 꽉 채우도록 해줌. */
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: white; /* 상태 요소의 텍스트를 흰색으로 지정함. */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#labels>div {
+  position: absolute;
+  left: 0;
+  top: 0; /* 초기 위치값은 브라우저의 왼쪽 상단으로 잡아놓음. */
+  font-size: large;
+  font-family: monospace;
+  user-select: none; /* 모델들의 상태 요소를 선택할 수 없도록 함 */
+  text-shadow: /* 텍스트 그림자를 이용하여 글자에 검은 윤곽선을 그려줌 */
+    -1px -1px 0 #000,
+    0 -1px 0 #000,
+    1px -1px 0 #000,
+    1px 0 0 #000,
+    1px 1px 0 #000,
+    0 1px 0 #000,
+    -1px 1px 0 #000,
+    -1px 0 0 #000;;  
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="./app.js" type="module"></script>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <!-- 모바일 환경에서 터치 이벤트를 받아 모델들을 움직일 수 있도록 만든 이미지 버튼 요소 -->
+    <div id="ui">
+      <div id="left">
+        <img
+          src="https://threejsfundamentals.org/threejs/resources/images/left.svg"
+        />
+      </div>
+      <!-- #ui 컨테이너 안의 flex 구조 내에서 해당 구분선 요소의 width는 40px이 되도록 하는 것임.  -->
+      <div style="flex: 0 0 40px"></div>
+      <div id="right">
+        <img
+          src="https://threejsfundamentals.org/threejs/resources/images/right.svg"
+        />
+      </div>
+    </div>
+
+    <!-- gltf 모델들의 로딩이 완료될 때까지 보여줄 프로그래스 바 -->
+    <div id="loading">
+      <div>
+        <div>...loading...</div>
+        <div class="progress">
+          <div id="progressbar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 각 모델들의 상태가 담긴 요소를 추가하여 보여주는 컨테이너 -->
+    <div id="labels"></div>
+  </body>
+</html>
